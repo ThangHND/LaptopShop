@@ -8,7 +8,7 @@ public class DashBoardController {
 
     @GetMapping("/admin")
     public String dashboard() {
-        return "admin/dashboard/index";
+        return "admin/user/index";
     }
 
 }

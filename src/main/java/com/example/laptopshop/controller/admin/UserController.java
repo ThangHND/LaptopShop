@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.repository.UserRepository;
 import com.example.laptopshop.service.UserService;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 @Controller
 public class UserController {
@@ -30,14 +31,14 @@ public class UserController {
     public String getAllUser(Model model) {
         List<User> users = this.service.getAllUser();
         model.addAttribute("showUser", users);
-        return "admin/dashboard/userDashboard";
+        return "admin/user/userDashboard";
     }
 
     @RequestMapping("/admin/detail/{id}")
     public String userDetail(Model model, @PathVariable long id) {
         User detail = this.service.getById(id);
         model.addAttribute("detail", detail);
-        return "admin/dashboard/userDetail";
+        return "admin/user/userDetail";
     }
 
     // function
@@ -45,11 +46,11 @@ public class UserController {
     @RequestMapping("/admin/user") // GET
     public String userDashboard(Model model) {
         model.addAttribute("newUser", new User());
-        return "admin/dashboard/createUser";
+        return "admin/user/createUser";
     }
 
     // create user
-    @RequestMapping(value = "admin/dashboard/createUser", method = RequestMethod.POST) // POST
+    @RequestMapping(value = "admin/user/createUser", method = RequestMethod.POST) // POST
     public String saveUser(Model model, @ModelAttribute("newUser") User user) {
         model.addAttribute("newUser", user);
         System.out.println(user);
@@ -63,7 +64,7 @@ public class UserController {
         User users = this.service.getById(id);
         model.addAttribute("newUser", users);
         System.out.println(users);
-        return "admin/dashboard/updateUser";
+        return "admin/user/updateUser";
     }
 
     @RequestMapping(value = "admin/updateUser", method = RequestMethod.POST)
@@ -75,6 +76,21 @@ public class UserController {
             users.setPhone(user.getPhone());
             this.service.saveUser(users);
         }
+        return "redirect:/admin/userDashboard";
+    }
+
+    @RequestMapping("/admin/delete/{id}")
+    public String getDeleteUser(Model model, @PathVariable long id) {
+        User user = this.service.getById(id);
+        model.addAttribute("newUser", user);
+        return "admin/user/deleteUser";
+    }
+
+    // delete
+    @RequestMapping(value = "admin/dashboard/delete", method = RequestMethod.POST)
+    public String deleteUser(Model model, @ModelAttribute("newUser") User user) {
+        this.service.deleteById(user.getId());
+        System.out.println(user.getId() + "asdasdasdasdas");
         return "redirect:/admin/userDashboard";
     }
 }

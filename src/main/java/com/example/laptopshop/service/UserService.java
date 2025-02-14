@@ -27,4 +27,8 @@ public class UserService {
         return this.repository.getById(id);
     }
 
+    public void deleteById(long id) {
+        this.repository.deleteById(id);
+    }
+
 }

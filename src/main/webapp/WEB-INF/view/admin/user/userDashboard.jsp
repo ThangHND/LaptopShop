@@ -35,7 +35,7 @@
                             <a href="/admin/detail/${user.id}">View</a>
                             <a href="/admin/user" class="btn btn-primary">Create</a>
                             <a href="/admin/updateUser/${user.id}" class="btn btn-warning">Update</a>
-                            <button class="btn btn-danger">Remove</button>
+                            <a href="/admin/delete/${user.id}" class="btn btn-danger">Remove</a>
                         </td>
                     </tr>
                 </c:forEach>

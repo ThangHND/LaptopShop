@@ -15,7 +15,7 @@
     <body>
         <div class="container mt-5">
 
-            <form:form action="/admin/dashboard/updateUser" method="post" modelAttribute="newUser">
+            <form:form action="/admin/user/createUser" method="post" modelAttribute="newUser">
                 <div class="mb-3">
                     <label class="form-label">Email address</label>
                     <form:input type="email" class="form-control" name="email" path="email" />
