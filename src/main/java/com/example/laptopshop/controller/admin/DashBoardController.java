@@ -10,4 +10,5 @@ public class DashBoardController {
     public String dashboard() {
         return "admin/dashboard/index";
     }
+
 }

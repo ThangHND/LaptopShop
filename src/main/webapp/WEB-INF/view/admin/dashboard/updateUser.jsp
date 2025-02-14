@@ -13,16 +13,17 @@
     </head>
 
     <body>
+        <h2>Update Information</h2>
         <div class="container mt-5">
 
-            <form:form action="/admin/dashboard/updateUser" method="post" modelAttribute="newUser">
+            <form:form action="/admin/updateUser" method="post" modelAttribute="newUser">
                 <div class="mb-3">
-                    <label class="form-label">Email address</label>
-                    <form:input type="email" class="form-control" name="email" path="email" />
+                    <label class="form-label">ID</label>
+                    <form:input type="text" class="form-control" name="email" path="id" />
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <form:input type="password" class="form-control" name="password" path="password" />
+                    <label class="form-label">Email address</label>
+                    <form:input type="email" class="form-control" name="email" path="email" disabled="true" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Full Name</label>
