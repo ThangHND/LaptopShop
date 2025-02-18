@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 // @Table(name = "user")
@@ -26,7 +25,7 @@ public class User {
     private String avatar;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToMany(mappedBy = "user")
@@ -122,9 +121,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
-                + ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + ", role=" + role + ", orders="
-                + orders + "]";
+        return "User{id=" + id + ", email='" + email + "', fullName='" + fullName + "', role="
+                + (role != null ? role.getName() : "null") + "}";
     }
 
 }

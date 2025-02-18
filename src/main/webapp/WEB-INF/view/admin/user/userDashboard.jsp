@@ -41,6 +41,7 @@
                                             <th scope="col">Email</th>
                                             <th scope="col">address</th>
                                             <th scope="col">phone</th>
+                                            <th>Role</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -52,6 +53,7 @@
                                                 <td>${user.email}</td>
                                                 <td>${user.address}</td>
                                                 <td>${user.phone}</td>
+                                                <td>${user.role.name}</td>
                                                 <td>
                                                     <a href="/admin/detail/${user.id}" class="btn btn-success">View</a>
                                                     <a href="/admin/updateUser/${user.id}"

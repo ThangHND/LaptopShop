@@ -35,30 +35,48 @@
 
                                     <div class="container mt-5">
 
-                                        <form:form action="/admin/updateUser" method="post" modelAttribute="newUser">
+                                        <form:form action="/admin/updateUser" method="post" modelAttribute="newUser"
+                                            enctype="multipart/form-data">
                                             <div class="mb-3">
                                                 <label class="form-label">ID</label>
-                                                <form:input type="text" class="form-control" name="email" path="id" />
+                                                <form:input type="text" class="form-control" path="id" />
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Email address</label>
-                                                <form:input type="email" class="form-control" name="email" path="email"
+                                                <form:input type="email" class="form-control" path="email"
                                                     disabled="true" />
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Full Name</label>
-                                                <form:input type="text" class="form-control" name="fullName"
-                                                    path="fullName" />
+                                                <form:input type="text" class="form-control" path="fullName" />
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Address</label>
-                                                <form:input type="text" class="form-control" name="address"
-                                                    path="address" />
+                                                <form:input type="text" class="form-control" path="address" />
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Phone</label>
-                                                <form:input type="text" class="form-control" name="phone"
-                                                    path="phone" />
+                                                <form:input type="text" class="form-control" path="phone" />
+                                            </div>
+
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <label class="form-label">ROLE</label>
+                                                <form:select class="form-select" path="role.name">
+                                                    <form:option value="ADMIN">ADMIN</form:option>
+                                                    <form:option value="USER">USER</form:option>
+                                                </form:select>
+                                            </div>
+
+
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <label for="avatarFile" class="form-label">Avatar: </label>
+                                                <input class="form-control" type="file" id="avatarFile"
+                                                    accept=".png, .jpg, .jpeg" name="getFileImage" />
+                                            </div>
+
+                                            <div class="col-12 mb-3">
+                                                <img src="" alt="avatar preview"
+                                                    style="max-height: 250px; display: none;" id="avatarPreview" />
                                             </div>
 
                                             <button type="submit" class="btn btn-primary">Submit</button>

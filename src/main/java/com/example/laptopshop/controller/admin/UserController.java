@@ -2,12 +2,13 @@ package com.example.laptopshop.controller.admin;
 
 import java.util.List;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.laptopshop.domain.Role;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.service.UploadService;
 import com.example.laptopshop.service.UserService;
@@ -16,13 +17,13 @@ import com.example.laptopshop.service.UserService;
 public class UserController {
     private final UserService service;
     private final UploadService uploadService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public UserController(UserService service, UploadService uploadService,
-            BCryptPasswordEncoder bCryptPasswordEncode) {
+            PasswordEncoder passwordEncoder) {
         this.service = service;
         this.uploadService = uploadService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncode;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // show list user
@@ -53,8 +54,16 @@ public class UserController {
     public String saveUser(Model model,
             @ModelAttribute("newUser") User user,
             @RequestParam("getFileImage") MultipartFile file) {
+        // avatar
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
-        // this.userRepository.save(user);
+
+        String hashPassword = passwordEncoder.encode(user.getPassword());
+
+        user.setAvatar(avatar);
+        user.setPassword(hashPassword);
+
+        user.setRole(this.service.getRoleByName(user.getRole().getName()));
+        this.service.saveUser(user);
 
         return "redirect:/admin/userDashboard";
     }
@@ -69,12 +78,23 @@ public class UserController {
     }
 
     @RequestMapping(value = "admin/updateUser", method = RequestMethod.POST)
-    public String UpdateUser(Model model, @ModelAttribute User user) {
+    public String UpdateUser(Model model, @ModelAttribute User user, @RequestParam("getFileImage") MultipartFile file) {
         User users = this.service.getById(user.getId());
         if (users != null) {
             users.setFullName(user.getFullName());
             users.setAddress(user.getAddress());
             users.setPhone(user.getPhone());
+
+            Role role = this.service.getRoleByName(user.getRole().getName());
+            users.setRole(role);
+
+            if (!file.isEmpty()) {
+                String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+                users.setAvatar(avatar);
+            } else {
+                users.setAvatar(users.getAvatar());
+            }
+
             this.service.saveUser(users);
         }
         return "redirect:/admin/userDashboard";
