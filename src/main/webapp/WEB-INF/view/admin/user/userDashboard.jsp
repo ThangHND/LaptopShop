@@ -31,7 +31,7 @@
                                     <li class="breadcrumb-item active">Table User</li>
                                 </ol>
                                 <div class="d-flex justify-content-end">
-                                    <a href="/admin/user" class="btn btn-primary">Create</a>
+                                    <a href="/admin/create" class="btn btn-primary">Create</a>
 
                                 </div>
                                 <table class="table table-hover container mt-5">

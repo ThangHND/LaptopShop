@@ -14,6 +14,18 @@
                 <title>Dashboard - SB Admin</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                <script>
+                    $(document).ready(() => {
+                        const avatarFile = $("#avatarFile");
+                        avatarFile.change(function (e) {
+                            const imgURL = URL.createObjectURL(e.target.files[0]);
+                            $("#avatarPreview").attr("src", imgURL);
+                            $("#avatarPreview").css({ "display": "block" });
+                        });
+                    });
+
+                </script>
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
 
@@ -35,35 +47,55 @@
 
                                     <div class="container mt-5">
 
-                                        <form:form action="/admin/user/createUser" method="post"
-                                            modelAttribute="newUser">
-                                            <div class="mb-3">
+                                        <form:form action="/admin/create/createUser" method="post"
+                                            modelAttribute="newUser" class="row" enctype="multipart/form-data">
+                                            <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label">Email address</label>
-                                                <form:input type="email" class="form-control" name="email"
-                                                    path="email" />
+                                                <form:input type="email" class="form-control" path="email" />
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label">Password</label>
-                                                <form:input type="password" class="form-control" name="password"
-                                                    path="password" />
+                                                <form:input type="password" class="form-control" path="password" />
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label">Full Name</label>
-                                                <form:input type="text" class="form-control" name="fullName"
-                                                    path="fullName" />
+                                                <form:input type="text" class="form-control" path="fullName" />
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label">Address</label>
-                                                <form:input type="text" class="form-control" name="address"
-                                                    path="address" />
+                                                <form:input type="text" class="form-control" path="address" />
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label">Phone</label>
-                                                <form:input type="text" class="form-control" name="phone"
-                                                    path="phone" />
+                                                <form:input type="text" class="form-control" path="phone" />
                                             </div>
 
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <label class="form-label">ROLE</label>
+                                                <form:select class="form-select" path="role.name">
+                                                    <form:option value="ADMIN">ADMIN</form:option>
+                                                    <form:option value="USER">USER</form:option>
+                                                </form:select>
+                                            </div>
+
+
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <label for="avatarFile" class="form-label">Avatar: </label>
+                                                <input class="form-control" type="file" id="avatarFile"
+                                                    accept=".png, .jpg, .jpeg" name="getFileImage" />
+                                            </div>
+
+                                            <div class="col-12 mb-3">
+                                                <img src="" alt="avatar preview"
+                                                    style="max-height: 250px; display: none;" id="avatarPreview" />
+                                            </div>
+
+
+                                            <div class="mb-5 col-12">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+
                                         </form:form>
 
                                     </div>
@@ -84,6 +116,9 @@
                 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
                     crossorigin="anonymous"></script>
                 <script src="js/datatables-simple-demo.js"></script>
+
+
+
             </body>
 
             </html>
