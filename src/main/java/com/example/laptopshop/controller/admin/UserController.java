@@ -1,30 +1,28 @@
 package com.example.laptopshop.controller.admin;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.laptopshop.domain.User;
-import com.example.laptopshop.repository.UserRepository;
+import com.example.laptopshop.service.UploadService;
 import com.example.laptopshop.service.UserService;
-
-import jakarta.servlet.ServletContext;
 
 @Controller
 public class UserController {
     private final UserService service;
-    private ServletContext servletContext;
+    private final UploadService uploadService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserController(UserService service, ServletContext servletContext) {
+    public UserController(UserService service, UploadService uploadService,
+            BCryptPasswordEncoder bCryptPasswordEncode) {
         this.service = service;
-        this.servletContext = servletContext;
+        this.uploadService = uploadService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncode;
     }
 
     // show list user
@@ -55,26 +53,9 @@ public class UserController {
     public String saveUser(Model model,
             @ModelAttribute("newUser") User user,
             @RequestParam("getFileImage") MultipartFile file) {
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         // this.userRepository.save(user);
 
-        byte[] bytes;
-        try {
-            bytes = file.getBytes();
-
-            String rootPath = this.servletContext.getRealPath("/resources/images");
-            File dir = new File(rootPath + File.separator + "avatar");
-            if (!dir.exists())
-                dir.mkdirs();
-            File serverFile = new File(dir.getAbsolutePath() + File.separator + System.currentTimeMillis() + "_" +
-                    file.getOriginalFilename());
-
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(serverFile));
-            bufferedOutputStream.write(bytes);
-            bufferedOutputStream.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return "redirect:/admin/userDashboard";
     }
 
