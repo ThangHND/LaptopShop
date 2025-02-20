@@ -47,33 +47,29 @@
                                                     <th>Name</th>
                                                     <th></th>Price</th>
                                                     <th>Factory</th>
-                                                    <th>Action</th>
-
-                                                    <th>Role</th>
+                                                    <th>Target</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <c:forEach var="product" items="${newProduct}">
+                                                    <tr>
+                                                        <th>${product.id}</th>
+                                                        <td>${product.name}</td>
+                                                        <td>${product.price}</td>
+                                                        <td>${product.factory}</td>
+                                                        <td>${product.target}</td>
 
-                                                <tr>
-                                                    <th></th>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-
-                                                    <td>
-                                                        <a href="/admin/detail/${user.id}"
-                                                            class="btn btn-success">View</a>
-                                                        <a href="/admin/updateUser/${user.id}"
-                                                            class="btn btn-warning">Update</a>
-                                                        <a href="/admin/delete/${user.id}"
-                                                            class="btn btn-danger">Remove</a>
-                                                    </td>
-                                                </tr>
-
+                                                        <td>
+                                                            <a href="/admin/product/${product.id}"
+                                                                class="btn btn-success">View</a>
+                                                            <a href="/admin/product/update/${product.id}"
+                                                                class="btn btn-warning">Update</a>
+                                                            <a href="/admin/delete/${user.id}"
+                                                                class="btn btn-danger">Remove</a>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>

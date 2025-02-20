@@ -47,23 +47,27 @@ public class UserController {
 
     // function
     // create user
-    @GetMapping("/admin/create") // GET
+    @GetMapping("/admin/user/create") // GET
     public String userDashboard(Model model) {
         model.addAttribute("newUser", new User());
         return "admin/user/createUser";
     }
 
     // create user
-    @PostMapping(value = "admin/create/createUser") // POST
+    @PostMapping(value = "admin/user/create") // POST
     public String saveUser(Model model,
             @ModelAttribute("newUser") @Valid User user,
-            BindingResult bindingResult,
+            BindingResult newUserBindingResult,
             @RequestParam("getFileImage") MultipartFile file) {
 
         // validate
-        List<FieldError> errors = bindingResult.getFieldErrors();
+        List<FieldError> errors = newUserBindingResult.getFieldErrors();
         for (FieldError error : errors) {
-            System.out.println(error.getObjectName() + "_" + error.getDefaultMessage());
+            System.out.println(">>>>" + error.getField() + "_" + error.getDefaultMessage());
+        }
+
+        if (newUserBindingResult.hasErrors()) {
+            return "admin/user/createUser";
         }
 
         // avatar
@@ -90,7 +94,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "admin/updateUser", method = RequestMethod.POST)
-    public String UpdateUser(Model model, @ModelAttribute User user, @RequestParam("getFileImage") MultipartFile file) {
+    public String UpdateUser(Model model,
+            @ModelAttribute User user,
+            @RequestParam("getFileImage") MultipartFile file) {
+
         User users = this.service.getById(user.getId());
         if (users != null) {
             users.setFullName(user.getFullName());

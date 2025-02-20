@@ -47,7 +47,7 @@
 
                                     <div class="container mt-5">
 
-                                        <form:form action="/admin/create/createProduct" method="post"
+                                        <form:form action="/admin/product/createProduct" method="post"
                                             modelAttribute="newProduct" class="row" enctype="multipart/form-data">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label">Name Product</label>
