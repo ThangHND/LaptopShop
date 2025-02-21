@@ -34,6 +34,7 @@
                                     <h2>${detail.price}</h2>
                                     <h2>${detail.factory}</h2>
                                     <h2>${detail.target}</h2>
+                                    <img src="/images/product/${detail.image}" alt="">
                                 </div>
                             </div>
                         </main>

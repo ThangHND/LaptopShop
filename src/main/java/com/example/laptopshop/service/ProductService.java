@@ -1,6 +1,7 @@
 package com.example.laptopshop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(long id) {
+    public Optional<Product> getProductById(long id) {
         return productRepository.findById(id);
     }
 }

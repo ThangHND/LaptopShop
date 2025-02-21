@@ -40,7 +40,7 @@ public class ProductController {
     // get detail by id
     @GetMapping("/admin/product/{id}")
     public String getProductById(Model model, @PathVariable long id) {
-        Product product = productService.getProductById(id);
+        Product product = productService.getProductById(id).get();
         model.addAttribute("detail", product);
         System.out.println(">>>>>>" + product);
         return "admin/product/detailProduct";
@@ -77,32 +77,37 @@ public class ProductController {
     // update Product
     @GetMapping("/admin/product/update/{id}")
     public String getProductbeforeUpdate(Model model, @PathVariable long id) {
-        Product product = productService.getProductById(id);
+        Product product = productService.getProductById(id).get();
         model.addAttribute("newProduct", product);
         return "admin/product/updateProduct";
     }
 
     @PostMapping("/admin/product/updateProduct")
-    public String updateProduct(Model model, @ModelAttribute("newProduct") Product product,
+    public String updateProduct(Model model, @ModelAttribute("newProduct") @Valid Product product,
+            BindingResult newProductBindingResult,
             @RequestParam("getFileImage") MultipartFile file) {
-        Product update = productService.getProductById(product.getId());
-        if (update != null) {
-            update.setName(product.getName());
-            update.setPrice(product.getPrice());
-            update.setDetailDesc(product.getDetailDesc());
-            update.setShortDesc(product.getShortDesc());
-            update.setQuantity(product.getQuantity());
-            update.setFactory(product.getFactory());
-            update.setTarget(product.getTarget());
 
-            if (!file.isEmpty()) {
-                String image = uploadService.handleSaveUploadFile(file, "product");
-                update.setImage(image);
-            } else {
-                update.setImage(product.getImage());
-            }
-            this.productService.handleSaveProduct(update);
+        if (newProductBindingResult.hasErrors()) {
+            return "admin/product/updateProduct";
         }
+
+        Product update = productService.getProductById(product.getId()).get();
+
+        if (!file.isEmpty()) {
+            String img = this.uploadService.handleSaveUploadFile(file, "product");
+            update.setImage(img);
+        }
+
+        update.setName(product.getName());
+        update.setPrice(product.getPrice());
+        update.setDetailDesc(product.getDetailDesc());
+        update.setShortDesc(product.getShortDesc());
+        update.setQuantity(product.getQuantity());
+        update.setFactory(product.getFactory());
+        update.setTarget(product.getTarget());
+
+        this.productService.handleSaveProduct(update);
+
         return "redirect:/admin/product";
 
     }
