@@ -60,15 +60,16 @@ public class UserController {
             BindingResult newUserBindingResult,
             @RequestParam("getFileImage") MultipartFile file) {
 
-        // validate
-        List<FieldError> errors = newUserBindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            System.out.println(">>>>" + error.getField() + "_" + error.getDefaultMessage());
-        }
+        // // validate
+        // List<FieldError> errors = newUserBindingResult.getFieldErrors();
+        // for (FieldError error : errors) {
+        // System.out.println(">>>>" + error.getField() + "_" +
+        // error.getDefaultMessage());
+        // }
 
-        if (newUserBindingResult.hasErrors()) {
-            return "admin/user/createUser";
-        }
+        // if (newUserBindingResult.hasErrors()) {
+        // return "admin/user/createUser";
+        // }
 
         // avatar
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");

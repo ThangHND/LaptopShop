@@ -1,11 +1,14 @@
 package com.example.laptopshop.domain.dto;
 
+import com.example.laptopshop.service.Validator.RegisterChecked;
+
+@RegisterChecked
 public class RegisterDTO {
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private String confirmPasswrod;
+    private String confirmPassword;
 
     public String getFirstName() {
         return firstName;
@@ -39,12 +42,12 @@ public class RegisterDTO {
         this.password = password;
     }
 
-    public String getConfirmPasswrod() {
-        return confirmPasswrod;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setConfirmPasswrod(String confirmPasswrod) {
-        this.confirmPasswrod = confirmPasswrod;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
 }
