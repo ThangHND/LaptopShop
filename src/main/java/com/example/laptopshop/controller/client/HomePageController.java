@@ -77,4 +77,8 @@ public class HomePageController {
         return "/";
     }
 
+    @GetMapping("/access-deny")
+    public String getDenyPage(Model model) {
+        return "client/auth/deny";
+    }
 }

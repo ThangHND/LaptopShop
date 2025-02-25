@@ -7,7 +7,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -15,6 +19,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public CustomUserDetailsService(UserService userService) {
         this.userService = userService;
+    }
+
+    protected final void clearAuthenticationAttributes(HttpServletRequest request) {
+        // chỉ su dụng session đã có sẵn, và không tạo session mới
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        }
     }
 
     @Override
