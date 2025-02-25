@@ -41,7 +41,7 @@ public class HomePageController {
     @GetMapping("/register")
     public String showPageRegister(Model model) {
         model.addAttribute("registerUser", new RegisterDTO());
-        return "/client/auth/register";
+        return "client/auth/register";
     }
 
     @PostMapping("/register")
@@ -68,6 +68,13 @@ public class HomePageController {
 
     @GetMapping("/login")
     public String showPageLogin(Model model) {
-        return "/client/auth/login";
+        return "client/auth/login";
     }
+
+    @PostMapping("/login")
+    public String loginUser() {
+
+        return "/";
+    }
+
 }
