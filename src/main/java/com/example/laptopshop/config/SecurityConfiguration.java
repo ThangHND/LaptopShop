@@ -23,6 +23,12 @@ import jakarta.servlet.DispatcherType;
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
+    private final CustomSuccessHandler customSuccessHandler; // Tiêm bean
+
+    // Constructor injection cho CustomSuccessHandler
+    public SecurityConfiguration(CustomSuccessHandler customSuccessHandler) {
+        this.customSuccessHandler = customSuccessHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -82,14 +88,14 @@ public class SecurityConfiguration {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login?error")
-                        .successHandler(customSuccessHandler())
+                        .successHandler(customSuccessHandler)
                         .permitAll())
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
 
         return http.build();
     }
 
-    public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler();
-    }
+    // public AuthenticationSuccessHandler customSuccessHandler() {
+    // return new CustomSuccessHandler();
+    // }
 }

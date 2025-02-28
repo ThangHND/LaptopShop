@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.laptopshop.controller.admin.ProductController;
 import com.example.laptopshop.domain.Product;
 import com.example.laptopshop.repository.ProductRepository;
 
