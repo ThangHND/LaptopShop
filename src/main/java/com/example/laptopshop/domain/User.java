@@ -48,15 +48,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    @OneToOne
-    @JoinColumn(name = "user")
+    @OneToOne(mappedBy = "user")
     private Cart cart;
 
     public User() {
     }
 
-    public User(long id, String email, String password, String fullName, String address, String phone, String avatar,
-            Role role, List<Order> orders) {
+    public User(long id,
+            @NotNull @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?``{|}~^.-]+@[a-zA-Z0-9.-]+$") String email,
+            @NotNull @Size(min = 2, message = "Password phải có tối thiểu 2 kí tự") String password,
+            @NotNull @Size(min = 3, message = "Full Name tối thiểu 3 kí tự") String fullName, String address,
+            String phone, String avatar, Role role, List<Order> orders, Cart cart) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -66,6 +68,7 @@ public class User {
         this.avatar = avatar;
         this.role = role;
         this.orders = orders;
+        this.cart = cart;
     }
 
     public long getId() {
@@ -140,10 +143,19 @@ public class User {
         this.orders = orders;
     }
 
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public String toString() {
-        return "User{id=" + id + ", email='" + email + "', fullName='" + fullName + "', role="
-                + (role != null ? role.getName() : "null") + "}";
+        return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
+                + ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + ", role=" + role + ", orders="
+                + orders + ", cart=" + cart + "]";
     }
 
 }
