@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.laptopshop.domain.Cart;
 import com.example.laptopshop.domain.CartDetail;
@@ -94,26 +95,38 @@ public class ProductService {
 
     }
 
-    public void handleRemmoveCartDetail(long id, HttpSession session) {
-        Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(id);
+    @Transactional
+    public void handleRemoveCartDetail(long cartDetailId, HttpSession session) {
+        Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
         if (cartDetailOptional.isPresent()) {
             CartDetail cartDetail = cartDetailOptional.get();
-
             Cart currentCart = cartDetail.getCart();
-            // delete cart-detail
-            this.cartDetailRepository.deleteById(id);
 
-            // update cart
-            if (currentCart.getSum() > 1) {
-                // update current cart
-                int s = currentCart.getSum() - 1;
-                currentCart.setSum(s);
-                session.setAttribute("sum", s);
-                this.cartRepository.save(currentCart);
-            } else {
-                // delete cart (sum -1)
-                this.cartRepository.deleteById(currentCart.getId());
-                session.setAttribute("sum", 0);
+            // Cập nhật giỏ hàng trước khi xóa CartDetail
+            if (currentCart != null) {
+                if (currentCart.getSum() > 1) {
+                    int s = currentCart.getSum() - 1;
+                    currentCart.setSum(s);
+                    session.setAttribute("sum", s);
+                    this.cartRepository.save(currentCart); // Lưu lại Cart trước khi xóa CartDetail
+                } else {
+                    session.setAttribute("sum", 0);
+                    this.cartRepository.deleteById(currentCart.getId()); // Xóa luôn Cart nếu không còn sản phẩm
+                }
+            }
+
+            // Xóa CartDetail
+            this.cartDetailRepository.deleteById(cartDetailId);
+        }
+    }
+
+    public void handleUpdateCartBeforeCheckout(List<CartDetail> cartDetails) {
+        for (CartDetail cartDetail : cartDetails) {
+            Optional<CartDetail> cdOptional = this.cartDetailRepository.findById(cartDetail.getId());
+            if (cdOptional.isPresent()) {
+                CartDetail currentCardDetail = cdOptional.get();
+                currentCardDetail.setQuantity(cartDetail.getQuantity());
+                this.cartDetailRepository.save(currentCardDetail);
             }
         }
     }

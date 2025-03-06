@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -58,18 +59,26 @@ public class ItemController {
             total += cartDetail.getPrice() * cartDetail.getQuantity();
         }
 
-        model.addAttribute("cart", cartDetails);
+        model.addAttribute("cartDetails", cartDetails);
         model.addAttribute("totalPrice", total);
+
+        model.addAttribute("cart", cart);
 
         return "client/cart/show";
     }
 
     @PostMapping("/delete-cart-product/{id}")
     public String handleCart(@PathVariable long id, HttpServletRequest request) {
-
         HttpSession session = request.getSession(false);
         long cartDetailId = id;
-        this.productService.handleRemmoveCartDetail(cartDetailId, session);
+        this.productService.handleRemoveCartDetail(cartDetailId, session);
         return "redirect:/cart";
+    }
+
+    @PostMapping("confirm-checkout")
+    public String getCheckoutPage(@ModelAttribute("cart") Cart cart) {
+        List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
+        this.productService.handleUpdateCartBeforeCheckout(cartDetails);
+        return "redirect:/checkout";
     }
 }

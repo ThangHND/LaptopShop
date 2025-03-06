@@ -228,6 +228,10 @@
                 priceElement.text(formatCurrency(newPrice) + " đ");
             }
 
+            const index = input.attr("data-cart-detail-index")
+            const el = document.getElementById(`cartDetails${index}.quantity`);
+            $(el).val(newVal);
+
             // Cập nhật tổng tiền giỏ hàng
             updateCartTotal();
         });
