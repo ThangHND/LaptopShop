@@ -8,10 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.laptopshop.domain.Cart;
 import com.example.laptopshop.domain.CartDetail;
+import com.example.laptopshop.domain.Order;
+import com.example.laptopshop.domain.OrderDetail;
 import com.example.laptopshop.domain.Product;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.repository.CartDetailRepository;
 import com.example.laptopshop.repository.CartRepository;
+import com.example.laptopshop.repository.OrderDetailRepository;
+import com.example.laptopshop.repository.OrderRepository;
 import com.example.laptopshop.repository.ProductRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -23,13 +27,18 @@ public class ProductService {
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
     private final UserService userService;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-            CartDetailRepository cartDetailRepository, UserService userService) {
+            CartDetailRepository cartDetailRepository, UserService userService,
+            OrderRepository orderRepository, OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.userService = userService;
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public Product handleSaveProduct(Product product) {
@@ -95,28 +104,27 @@ public class ProductService {
 
     }
 
-    @Transactional
     public void handleRemoveCartDetail(long cartDetailId, HttpSession session) {
         Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
         if (cartDetailOptional.isPresent()) {
             CartDetail cartDetail = cartDetailOptional.get();
             Cart currentCart = cartDetail.getCart();
 
-            // Cập nhật giỏ hàng trước khi xóa CartDetail
+            // Xóa CartDetail trước
+            this.cartDetailRepository.deleteById(cartDetailId);
+
+            // Cập nhật giỏ hàng sau khi xóa CartDetail
             if (currentCart != null) {
-                if (currentCart.getSum() > 1) {
-                    int s = currentCart.getSum() - 1;
-                    currentCart.setSum(s);
-                    session.setAttribute("sum", s);
-                    this.cartRepository.save(currentCart); // Lưu lại Cart trước khi xóa CartDetail
+                int newSum = currentCart.getSum() - 1;
+                if (newSum > 0) {
+                    currentCart.setSum(newSum);
+                    session.setAttribute("sum", newSum);
+                    this.cartRepository.save(currentCart);
                 } else {
                     session.setAttribute("sum", 0);
-                    this.cartRepository.deleteById(currentCart.getId()); // Xóa luôn Cart nếu không còn sản phẩm
+                    this.cartRepository.deleteById(currentCart.getId());
                 }
             }
-
-            // Xóa CartDetail
-            this.cartDetailRepository.deleteById(cartDetailId);
         }
     }
 
@@ -127,6 +135,47 @@ public class ProductService {
                 CartDetail currentCardDetail = cdOptional.get();
                 currentCardDetail.setQuantity(cartDetail.getQuantity());
                 this.cartDetailRepository.save(currentCardDetail);
+            }
+        }
+    }
+
+    public void handlePlaceOrder(User user, HttpSession session, String receiverName, String receiverAddress,
+            String receiverPhone) {
+
+        // create order
+        Order order = new Order();
+        order.setUser(user);
+
+        order.setReceiverName(receiverName);
+        order.setReceiverAddress(receiverAddress);
+        order.setReceiverPhone(receiverPhone);
+        order = this.orderRepository.save(order);
+
+        // create order_detail
+
+        // step 1: get cart by user
+        Cart cart = this.cartRepository.findByUser(user);
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+
+            if (cartDetails != null) {
+                for (CartDetail cd : cartDetails) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrder(order); // gan toi tuong => thuc chat trong table se luu id
+                    orderDetail.setProducts(cd.getProduct());
+                    orderDetail.setPrice(cd.getPrice());
+                    orderDetail.setQuantity(cd.getQuantity());
+                    this.orderDetailRepository.save(orderDetail);
+                }
+
+                // step 2: delete cart_detail and cart
+                for (CartDetail cd : cartDetails) {
+                    this.cartDetailRepository.deleteById(cd.getId());
+                }
+                this.cartRepository.deleteById(cart.getId());
+
+                // step 3: update session
+                session.setAttribute("sun", 0);
             }
         }
     }

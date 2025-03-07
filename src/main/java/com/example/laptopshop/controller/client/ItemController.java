@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.laptopshop.domain.Cart;
 import com.example.laptopshop.domain.CartDetail;
@@ -61,9 +62,7 @@ public class ItemController {
 
         model.addAttribute("cartDetails", cartDetails);
         model.addAttribute("totalPrice", total);
-
         model.addAttribute("cart", cart);
-
         return "client/cart/show";
     }
 
@@ -80,5 +79,49 @@ public class ItemController {
         List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
         this.productService.handleUpdateCartBeforeCheckout(cartDetails);
         return "redirect:/checkout";
+    }
+
+    @GetMapping("/checkout")
+    public String getCheckoutPage(Model model, HttpServletRequest request) {
+        User user = new User();
+        HttpSession session = request.getSession(false);
+        long id = (long) session.getAttribute("id");
+        user.setId(id);
+
+        Cart cart = this.productService.fetchByUser(user);
+
+        List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
+        double total = 0;
+        for (CartDetail cartDetail : cartDetails) {
+            total += cartDetail.getPrice() * cartDetail.getQuantity();
+        }
+
+        model.addAttribute("cartDetails", cartDetails);
+        model.addAttribute("totalPrice", total);
+
+        model.addAttribute("cart", cart);
+
+        return "client/cart/checkout";
+    }
+
+    @PostMapping("/place-order")
+    public String handlePlaceOrder(HttpServletRequest request,
+            @RequestParam("receiverName") String receiverName,
+            @RequestParam("receiverAddress") String receiverAddress,
+            @RequestParam("receiverPhone") String receiverPhone
+
+    ) {
+        HttpSession session = request.getSession(false);
+        User user = new User();
+        long id = (long) session.getAttribute("id");
+        user.setId(id);
+
+        this.productService.handlePlaceOrder(user, session, receiverName, receiverAddress, receiverPhone);
+        return "thanks";
+    }
+
+    @GetMapping("/thanks")
+    public String getThanksPage() {
+        return "client/cart/thanks";
     }
 }

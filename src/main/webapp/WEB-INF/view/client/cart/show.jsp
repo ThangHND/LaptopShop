@@ -221,11 +221,16 @@
                                                         </div>
                                                     </c:forEach>
                                                 </div>
-
                                                 <button
                                                     class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                                                    type="button">Tiến hành thanh toán</button>
+                                                    type="submit">Tiến hành thanh toán</button>
                                             </form:form>
+
+
+
+
+
+
                                         </div>
                                     </div>
                                 </c:if>
