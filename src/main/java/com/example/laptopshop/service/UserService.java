@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.example.laptopshop.domain.Role;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.domain.dto.RegisterDTO;
+import com.example.laptopshop.repository.OrderRepository;
+import com.example.laptopshop.repository.ProductRepository;
 import com.example.laptopshop.repository.RoleRepository;
 import com.example.laptopshop.repository.UserRepository;
 
@@ -14,10 +16,15 @@ import com.example.laptopshop.repository.UserRepository;
 public class UserService {
     private final UserRepository repository;
     private final RoleRepository roleRepository;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
-    public UserService(UserRepository repository, RoleRepository roleRepository) {
+    public UserService(UserRepository repository, RoleRepository roleRepository,
+            ProductRepository productRepository, OrderRepository orderRepository) {
         this.repository = repository;
         this.roleRepository = roleRepository;
+        this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
     }
 
     public User saveUser(User user) {
@@ -54,5 +61,23 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return this.repository.findByEmail(email);
+    }
+
+    public long countUsers() {
+        return this.repository.count();
+    }
+
+    public long countProducts() {
+        return this.productRepository.count();
+
+    }
+
+    public long countOrders() {
+        return this.orderRepository.count();
+
+    }
+
+    public User findById(long id) {
+        return this.repository.findById(id);
     }
 }

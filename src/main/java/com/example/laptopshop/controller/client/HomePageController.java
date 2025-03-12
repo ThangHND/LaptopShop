@@ -8,8 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.laptopshop.domain.Order;
 import com.example.laptopshop.domain.Product;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.domain.dto.RegisterDTO;
@@ -82,6 +84,18 @@ public class HomePageController {
     @GetMapping("/access-deny")
     public String getDenyPage(Model model) {
         return "client/auth/deny";
+    }
+
+    @GetMapping("history-order")
+    public String getHistoryPage(Model model, HttpServletRequest request) {
+        User currentUser = new User();
+        HttpSession session = request.getSession(false);
+        long id = (long) session.getAttribute("id");
+        currentUser.setId(id);
+
+        List<Order> order = this.productService.fetchOrderByUser(currentUser);
+        model.addAttribute("orders", order);
+        return "client/auth/history";
     }
 
 }

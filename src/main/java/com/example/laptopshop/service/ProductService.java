@@ -141,16 +141,6 @@ public class ProductService {
 
     public void handlePlaceOrder(User user, HttpSession session, String receiverName, String receiverAddress,
             String receiverPhone) {
-
-        // create order
-        Order order = new Order();
-        order.setUser(user);
-
-        order.setReceiverName(receiverName);
-        order.setReceiverAddress(receiverAddress);
-        order.setReceiverPhone(receiverPhone);
-        order = this.orderRepository.save(order);
-
         // create order_detail
 
         // step 1: get cart by user
@@ -159,6 +149,21 @@ public class ProductService {
             List<CartDetail> cartDetails = cart.getCartDetails();
 
             if (cartDetails != null) {
+
+                // create order
+                Order order = new Order();
+                order.setUser(user);
+
+                order.setReceiverName(receiverName);
+                order.setReceiverAddress(receiverAddress);
+                order.setReceiverPhone(receiverPhone);
+                order.setStatus("PENDING");
+                double sum = 0;
+                for (CartDetail cd : cartDetails) {
+                    sum += cd.getPrice();
+                }
+                order.setTotalPrice(sum);
+                order = this.orderRepository.save(order);
                 for (CartDetail cd : cartDetails) {
                     OrderDetail orderDetail = new OrderDetail();
                     orderDetail.setOrder(order); // gan toi tuong => thuc chat trong table se luu id
@@ -178,5 +183,26 @@ public class ProductService {
                 session.setAttribute("sun", 0);
             }
         }
+    }
+
+    public List<Order> getAllOrder() {
+        return this.orderRepository.findAll();
+    }
+
+    public Optional<Order> fetchOrderById(long id) {
+        return this.orderRepository.findById(id);
+    }
+
+    public void handleSaveOrder(Order order) {
+        Optional<Order> optional = this.fetchOrderById(order.getId());
+        if (optional.isPresent()) {
+            Order currentOrder = optional.get();
+            currentOrder.setStatus(order.getStatus());
+            this.orderRepository.save(currentOrder);
+        }
+    }
+
+    public List<Order> fetchOrderByUser(User user) {
+        return this.orderRepository.getOrderByUser(user);
     }
 }

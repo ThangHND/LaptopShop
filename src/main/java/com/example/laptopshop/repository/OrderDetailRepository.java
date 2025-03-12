@@ -7,5 +7,4 @@ import com.example.laptopshop.domain.OrderDetail;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
-
 }

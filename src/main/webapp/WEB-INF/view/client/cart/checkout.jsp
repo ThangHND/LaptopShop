@@ -189,11 +189,6 @@
                                                                 đ
                                                             </p>
                                                         </div>
-
-                                                        <button
-                                                            class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                                                            type="submit">Xác nhận đặt hàng</button>
-
                                                     </div>
                                                 </div>
 
@@ -223,16 +218,12 @@
                                                                         <input class="form-control" name="receiverPhone"
                                                                             required>
                                                                     </div>
-
-                                                                    <div class="mt-4">
-                                                                        <i class="fas fa-arrow-left"></i>
-                                                                        <a href="/cart">Quay lại giỏ hàng</a>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <button type="submit">Xác nhận thanh toán</button>
+                                                    <button class="btn btn-primary" type="submit">Xác nhận thanh
+                                                        toán</button>
                                                 </form:form>
                                             </div>
                                         </div>
